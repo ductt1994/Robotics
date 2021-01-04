@@ -1,26 +1,73 @@
 #include <iostream>
 #include <vector>
+#include "MAT.h"
+constexpr auto PI = 3.14159265;
 
 int main()
 {
-	//Create a vector
-	std::vector<int> v_1;
-	v_1 = { 1,2,3 };
 
-	std::vector<int>* p = &v_1;
+	//Exercise 1
+	////////////////////////////////////////////////////////////////////////////////////
+	//a)
+	double theta = 90 * PI / 180;
+	double D_x = 0;
+	double D_y = 1;
 
-	for (int i = 0; i < v_1.size(); i++)
-	{
-		std::cout << "v_1[" << i << "] = " << v_1[i] << std::endl;
-	}
+	mat g_T_x1(3,3);
+	g_T_x1 = { cos(theta), -sin(theta), D_x,
+			   sin(theta),	cos(theta), D_y,
+					    0,			 0,   1 };;
 
-	std::cout << "v_1.size(): " << v_1.size() << std::endl;
-	std::cout << "p->size(): " << p->size() << std::endl;
+	mat x1_p1(3, 1);
 
-	for (int i = 0; i < p->size(); i++)
-	{
-		std::cout << "(*p)[" << i << "] = " << (*p)[i] << std::endl;
-	}
+	x1_p1 = { 2,
+			 -2,
+			  1 };;
+
+	mat gl_p1(3, 1);
+	gl_p1 = g_T_x1 * x1_p1;
+
+	std::cout << "p1 in global: " << std::endl;
+	gl_p1.show();
+
+	////////////////////////////////////////////////////////////////////////////////////
+	//b)
+	mat x1_T_g(3, 3);
+	x1_T_g = g_T_x1.inv();
+
+	gl_p1 = { 2,
+			  3,
+			  1 };;
+
+	x1_p1 = x1_T_g * gl_p1;
+
+	std::cout << "p1 in x1: " << std::endl;
+	x1_p1.show();
+
+	////////////////////////////////////////////////////////////////////////////////////
+	//d)
+
+	x1_T_g = { cos(-90 * PI / 180), -sin(-90 * PI / 180), -1,
+			   sin(-90 * PI / 180),  cos(-90 * PI / 180),  0,
+								 0,					   0,  1 };
+	
+	mat x2_T_x1(3, 3);
+	x2_T_x1 = { cos(-180 * PI / 180), -sin(-180 * PI / 180), -2,
+				sin(-180 * PI / 180),  cos(-180 * PI / 180),  1,
+								   0,					  0,  1 };;
+
+	gl_p1 = { 2,
+			  3,
+			  1 };
+
+
+	mat x2_p1(3, 1);
+
+	x2_p1 = x2_T_x1 * x1_T_g * gl_p1;
+
+	std::cout << "x2_T_x1: " << std::endl;
+
+	x2_p1.show();
 
 	return 0;
 }
